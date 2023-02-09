@@ -2,6 +2,7 @@ version: "3"
 
 services:
   bot:
+    container_name: bot_dev
     build:
       context: ./bot
       dockerfile: Dockerfile
@@ -19,6 +20,7 @@ services:
       - browser
 
   browser:
+    container_name: browser_dev
     image: browserless/chrome:latest
     hostname: browser
     volumes:
@@ -41,6 +43,30 @@ services:
       - 3000:3000
     networks:
         - bot-whatsapp-ypf
+
+  web:
+    container_name: web_dev
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    env_file:
+      - ./web/.env
+    ports:
+      - 4001:80
+    restart: unless-stopped
+    volumes:
+      - ./web/config:/app/config
+      - ./web/public:/app/public
+      - ./web/app:/app/app
+      - ./web/resources:/app/resources
+      - ./web/routes:/app/routes
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./web/docker:/app/docker"
+    networks:
+      - bot-whatsapp-ypf
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
 
 
 networks:
