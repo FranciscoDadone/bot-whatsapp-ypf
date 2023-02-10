@@ -1,16 +1,19 @@
 version: "3"
 
+volumes:
+  whatsapp-session:
+
 services:
   bot:
     build:
       context: ./bot
       dockerfile: Dockerfile
-    working_dir: /home/node
     networks:
       - bot-whatsapp-ypf
     environment:
       BROWSER_URL: 'ws://browser:3000'
-      MONGODB_URI: 'mongodb://mongodb:27017'
+    volumes:
+      - whatsapp-session:/.wwebjs_auth/session
     command: npm run start
     restart: unless-stopped
     depends_on:
@@ -20,7 +23,7 @@ services:
     image: browserless/chrome:latest
     hostname: browser
     volumes:
-      - ./bot/.wwebjs_auth/session/:/usr/src/app/user-data-dir
+      - whatsapp-session:/usr/src/app/user-data-dir
     environment:
       CONNECTION_TIMEOUT: -1
       KEEP_ALIVE: 'true'
@@ -38,7 +41,7 @@ services:
     ports:
       - 3000:3000
     networks:
-        - bot-whatsapp-ypf
+      - bot-whatsapp-ypf
 
   web:
     container_name: web
