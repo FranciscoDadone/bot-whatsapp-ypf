@@ -11,7 +11,7 @@ const client = new Client({
     },
 });
 
-console.log("Starting bot...")
+console.log("Starting bot...1")
 
 const init = async () => {
     client.initialize();

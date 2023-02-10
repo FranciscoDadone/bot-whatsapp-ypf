@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "node ./src",
-    "dev": "nodemon ./src"
+    "dev": "supervisor ./src"
   },
   "author": "Francisco Dadone",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "nodemon": "^2.0.20",
     "puppeteer": "18.1.0",
     "qrcode-terminal": "^0.12.0",
+    "supervisor": "^0.12.0",
     "whatsapp-web.js": "github:franciscodadone/whatsapp-web.js",
     "wwebjs-mongo": "^1.1.0"
   }

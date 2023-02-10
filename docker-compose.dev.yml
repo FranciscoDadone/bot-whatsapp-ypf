@@ -2,6 +2,7 @@ version: "3"
 
 volumes:
   whatsapp-session:
+  datafiles:
 
 services:
   bot:
@@ -9,7 +10,7 @@ services:
       context: ./bot
       dockerfile: Dockerfile
     networks:
-      - bot-whatsapp-ypf
+      - network
     environment:
       BROWSER_URL: 'ws://browser:3000'
     volumes:
@@ -42,7 +43,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - bot-whatsapp-ypf
+      - network
 
   web:
     container_name: web
@@ -55,12 +56,20 @@ services:
       - 4001:80
     restart: always
     volumes:
+      - ./web/config:/app/config
+      - ./web/public:/app/public
+      - ./web/app:/app/app
+      - ./web/resources:/app/resources
+      - ./web/routes:/app/routes
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+      - "./web/docker:/app/docker"
     networks:
-      - bot-whatsapp-ypf
+      - network
 
 
 networks:
-  bot-whatsapp-ypf:
-    driver: bridge
+  network:
+    external:
+      name: arbit
+
