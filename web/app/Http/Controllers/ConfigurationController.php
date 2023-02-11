@@ -12,7 +12,9 @@ class ConfigurationController extends Controller
     }
 
     public function delete_number(Request $request) {
-        Numeros::where([['id', $request->id]])->delete();
+        Numeros::where([['id', $request->id]])->update([
+            'eliminado' => 1
+        ]);
         return "Ok";
     }
 

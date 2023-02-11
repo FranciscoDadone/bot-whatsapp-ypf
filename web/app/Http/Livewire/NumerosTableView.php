@@ -19,7 +19,7 @@ class NumerosTableView extends TableView
 
     protected function repository()
     {
-        return Numeros::query();
+        return Numeros::where([['eliminado', '!=', 1]]);
     }
 
     public function headers(): array
