@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('tickets') }}">
                         <p>Admin bot YPF</p>
                         <!-- <embed src="{{asset('imgs/YPF_logo_vector.svg')}}" width="260" height="100"/> -->
                     </a>
@@ -13,10 +13,10 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('tickets')" :active="request()->routeIs('tickets')">
                         {{ __('Tickets') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('configuracion/numeros')" :active="request()->routeIs('configuracion/numeros')">
+                    <x-nav-link :href="route('configuracion.numeros')" :active="request()->routeIs('configuracion.numeros')">
                         {{ __('Números') }}
                     </x-nav-link>
                 </div>
@@ -71,8 +71,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('tickets')" :active="request()->routeIs('tickets')">
+                {{ __('Tickets') }}
             </x-responsive-nav-link>
         </div>
 

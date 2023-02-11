@@ -57,6 +57,7 @@ services:
     restart: always
     volumes:
       - ./web/config:/app/config
+      - ./web/database:/app/database
       - ./web/public:/app/public
       - ./web/app:/app/app
       - ./web/resources:/app/resources
