@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Numeros;
+use App\Models\PhoneNumber;
 
 class ConfigurationController extends Controller
 {
@@ -12,19 +12,19 @@ class ConfigurationController extends Controller
     }
 
     public function delete_number(Request $request) {
-        Numeros::where([['id', $request->id]])->update([
+        PhoneNumber::where([['id', $request->id]])->update([
             'eliminado' => 1
         ]);
         return "Ok";
     }
 
     public function new_number(Request $request) {
-        Numeros::create([
-            'nombre' => $request->nombre,
-            'apellido' => $request->apellido,
-            'estacion' => $request->estacion,
-            'descripcion' => $request->descripcion,
-            'numero' => $request->numero
+        PhoneNumber::create([
+            'name' => $request->nombre,
+            'surname' => $request->apellido,
+            'station' => $request->estacion,
+            'description' => $request->descripcion,
+            'number' => $request->numero
         ]);
         return redirect()->back();
     }

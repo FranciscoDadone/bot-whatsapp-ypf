@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('phone_numbers', function (Blueprint $table) {
             $table->id();
-            $table->integer('from');
-            $table->string('messages');
-            $table->string('status');
-            $table->string('notes');
+            $table->string('name')->nullable();
+            $table->string('surname')->nullable();
+            $table->string('station')->nullable();
+            $table->string('description')->nullable();
+            $table->string('number');
+            $table->boolean('deleted')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('phone_numbers');
     }
 };

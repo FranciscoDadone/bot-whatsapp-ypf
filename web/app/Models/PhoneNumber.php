@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Numeros extends Authenticatable
+class PhoneNumber extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -18,13 +18,12 @@ class Numeros extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'nombre',
-        'apellido',
-        'estacion',
-        'descripcion',
-        'numero',
-        'created_at',
-        'updated_at',
+        'name',
+        'surname',
+        'station',
+        'description',
+        'number',
+        'created_at'
     ];
 
     /**

@@ -1,6 +1,6 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { connect, getRegisteredNumbersLike, storeMessage } = require('./dbConnection');
+const { connect, getRegisteredNumbersLike, storeMessage, getOpenTicketsFrom, openNewTicket } = require('./dbConnection');
 
 
 const client = new Client({
@@ -50,6 +50,18 @@ client.on('message', async (message) => {
 
     // No hay números registrados a ese número.
     if (!numbersLike.length) return;
+    const userId = numbersLike[0].id;
 
-    storeMessage(message.body, numbersLike[0].id);
+    const msgId = (await storeMessage(message.body, userId))[0].insertId;
+
+    const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
+
+    if (openTicketFromUser == undefined) { // No existe un ticket ya abierto cargando datos -> crear ticket
+        const ticketId = (await openNewTicket(userId, msgId))[0].insertId;
+        client.sendMessage(message.from,
+            `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _cerrarticket_`
+        )
+    } else {
+
+    }
 })

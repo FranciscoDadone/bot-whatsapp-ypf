@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mensajes', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->integer('reportado_por');
-            $table->string('mensaje');
-            $table->timestamp('fecha')->useCurrent();
+            $table->integer('from');
+            $table->string('message');
+            $table->timestamp('date')->useCurrent();
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mensajes');
+        Schema::dropIfExists('messages');
     }
 };
