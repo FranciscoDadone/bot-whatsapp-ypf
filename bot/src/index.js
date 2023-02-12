@@ -1,6 +1,17 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const { connect, getRegisteredNumbersLike, storeMessage, getOpenTicketsFrom, openNewTicket } = require('./dbConnection');
+const { 
+    connect, 
+    getRegisteredNumbersLike, 
+    storeMessage, 
+    getOpenTicketsFrom, 
+    openNewTicket, 
+    addNewMessageToTicket,
+    getAllLoadingTickets,
+    moveTicketToOpen,
+    setNumberFrom,
+    getNumberFromId
+} = require('./dbConnection');
 
 
 const client = new Client({
@@ -19,8 +30,26 @@ console.log("Starting bot...")
 
 const init = async () => {
     client.initialize();
+    checkLoadingTicket();
 };
 setTimeout(init, 5000);
+
+const checkLoadingTicket = async () => {
+    const loadingTickets = await getAllLoadingTickets();
+    
+    loadingTickets.forEach(async (ticket) => {
+        const dateDiff = ((new Date() - ticket.created_at) / 1000) / 60;
+        if (dateDiff >= 5) {
+            moveTicketToOpen(ticket.id);
+            const numberFrom = (await getNumberFromId(ticket.from))[0].number_from;
+            client.sendMessage(numberFrom, 
+                `Ticket *#${ticket.id}* guardado!`
+            );
+        }
+    });
+
+    setTimeout(checkLoadingTicket, 60000);
+}
 
 client.on('qr', (qr) => {
     qrcode.generate(qr, {small: true});
@@ -50,6 +79,9 @@ client.on('message', async (message) => {
 
     // No hay números registrados a ese número.
     if (!numbersLike.length) return;
+    if (numbersLike[0].number_from == null) {
+        setNumberFrom(numbersLike[0].id, message.from);
+    }
     const userId = numbersLike[0].id;
 
     const msgId = (await storeMessage(message.body, userId))[0].insertId;
@@ -62,6 +94,9 @@ client.on('message', async (message) => {
             `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _cerrarticket_`
         )
     } else {
-
+        addNewMessageToTicket(openTicketFromUser.id, msgId);
+        client.sendMessage(message.from, 
+            `Mensaje agregado al Ticket *#${openTicketFromUser.id}* \nTu Ticket se cerrará automáticamente en 5 minutos.`
+        );
     }
 })

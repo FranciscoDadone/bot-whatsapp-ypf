@@ -23,6 +23,7 @@ class PhoneNumber extends Authenticatable
         'station',
         'description',
         'number',
+        'number_from',
         'created_at'
     ];
 
