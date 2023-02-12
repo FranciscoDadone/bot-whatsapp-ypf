@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('reportado_por');
             $table->string('mensaje');
-            $table->timestamps();
+            $table->timestamp('fecha')->useCurrent();
         });
     }
 
