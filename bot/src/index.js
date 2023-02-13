@@ -10,7 +10,8 @@ const {
     getAllLoadingTickets,
     moveTicketToOpen,
     setNumberFrom,
-    getNumberFromId
+    getNumberById,
+    deleteTicketById
 } = require('./dbConnection');
 
 
@@ -41,7 +42,7 @@ const checkLoadingTicket = async () => {
         const dateDiff = ((new Date() - ticket.created_at) / 1000) / 60;
         if (dateDiff >= 5) {
             moveTicketToOpen(ticket.id);
-            const numberFrom = (await getNumberFromId(ticket.from))[0].number_from;
+            const numberFrom = (await getNumberById(ticket.from))[0].number_from;
             client.sendMessage(numberFrom, 
                 `Ticket *#${ticket.id}* guardado!`
             );
@@ -79,19 +80,33 @@ client.on('message', async (message) => {
 
     // No hay números registrados a ese número.
     if (!numbersLike.length) return;
-    if (numbersLike[0].number_from == null) {
-        setNumberFrom(numbersLike[0].id, message.from);
-    }
+    if (numbersLike[0].number_from == null) setNumberFrom(numbersLike[0].id, message.from);
     const userId = numbersLike[0].id;
-
     const msgId = (await storeMessage(message.body, userId))[0].insertId;
-
     const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
+
+    // Cerrar ticket
+    if (message.body.toLowerCase() == 'terminarticket') {
+        moveTicketToOpen(openTicketFromUser.id);
+        client.sendMessage(message.from, 
+            `Ticket *#${openTicketFromUser.id}* guardado!`
+        );
+        return;
+    }
+
+    // Eliminar ticket
+    if (message.body.toLowerCase() == 'eliminarticket') {
+        deleteTicketById(openTicketFromUser.id);
+        client.sendMessage(message.from, 
+            `Ticket *#${openTicketFromUser.id}* eliminado.`
+        );
+        return;
+    }
 
     if (openTicketFromUser == undefined) { // No existe un ticket ya abierto cargando datos -> crear ticket
         const ticketId = (await openNewTicket(userId, msgId))[0].insertId;
         client.sendMessage(message.from,
-            `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _cerrarticket_`
+            `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _terminarticket_ \n O para eliminarlo _eliminarticket_`
         )
     } else {
         addNewMessageToTicket(openTicketFromUser.id, msgId);

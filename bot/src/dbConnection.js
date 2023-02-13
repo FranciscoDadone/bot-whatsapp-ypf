@@ -84,14 +84,38 @@ const moveTicketToOpen = (id) => {
     connection.promise().query('UPDATE `tickets` SET `status`="OPEN" WHERE id=?;', [id]);
 };
 
+/**
+ * Asigna el valor real del número de teléfono al usuario.
+ * @param {*} id 
+ * @param {*} from 
+ */
 const setNumberFrom = (id, from) => {
     console.log(from, id)
     connection.promise().query('UPDATE `phone_numbers` SET `number_from`=? WHERE id=?;', [from, id]);
 };
 
-const getNumberFromId = async (id) => {
+const getNumberById = async (id) => {
     return (await connection.promise().query('SELECT * FROM `phone_numbers` WHERE id=?;', [id]))[0];
 };
+
+const getTicketById = async (id) => {
+    return (await connection.promise().query('SELECT * FROM `tickets` WHERE id=?;', [id]))[0][0];
+}
+
+const deleteMessageById = (id) => {
+    connection.promise().query('DELETE FROM `messages` WHERE id=?;', [id]);
+}
+
+const deleteTicketById = async (id) => {
+    const ticket = await getTicketById(id);
+    const messages = ticket.messages.split(',');
+    
+    messages.forEach((message) => {
+        deleteMessageById(message);
+    });
+
+    connection.promise().query('DELETE FROM `tickets` WHERE id=?;', [id]);
+}
 
 module.exports = {
     connect, 
@@ -103,5 +127,8 @@ module.exports = {
     getAllLoadingTickets,
     moveTicketToOpen,
     setNumberFrom,
-    getNumberFromId
+    getNumberById,
+    deleteTicketById,
+    getTicketById,
+    deleteMessageById
 }
