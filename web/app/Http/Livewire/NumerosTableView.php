@@ -42,7 +42,7 @@ class NumerosTableView extends TableView
             UI::editable($model, 'station'),
             UI::editable($model, 'description'),
             UI::editable($model, 'number'),
-            "<button onclick='deleteNum({$model->id})'>Eliminar</button>"
+            '<button onclick="deleteNum(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
         ];
     }
 

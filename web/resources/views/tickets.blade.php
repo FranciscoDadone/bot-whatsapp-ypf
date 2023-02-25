@@ -28,4 +28,8 @@
             }
         })
     }
+
+    function verTicket(id) {
+
+    }
 </script>

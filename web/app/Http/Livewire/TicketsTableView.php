@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use LaravelViews\Views\TableView;
 use App\Models\Ticket;
-use LaravelViews\Facades\UI;
 use LaravelViews\Facades\Header;
 
 
@@ -42,7 +41,7 @@ class TicketsTableView extends TableView
             substr($model->messages()[count($model->messages()) - 1]->message, 0, 50),
             $model->status,
             $model->updated_at,
-            "<button onclick='deleteTicket({$model->id})'>Eliminar</button>"
+            '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button onclick="deleteTicket(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
         ];
     }
 }
