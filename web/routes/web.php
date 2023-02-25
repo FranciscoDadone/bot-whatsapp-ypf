@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\TicketsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/configuracion/numeros', [ConfigurationController::class, 'numeros'])->name('configuracion.numeros');
     Route::post('/configuracion/numeros/delete/{id}', [ConfigurationController::class, 'delete_number'])->name('configuracion.numeros.delete');
     Route::post('/configuracion/numeros/new', [ConfigurationController::class, 'new_number'])->name('configuracion.numeros.new');
+
+    Route::post('/tickets/delete/{id}', [TicketsController::class, 'delete'])->name('tickets.delete');
 });
 
 require __DIR__.'/auth.php';

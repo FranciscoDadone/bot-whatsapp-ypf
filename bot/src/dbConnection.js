@@ -44,7 +44,7 @@ const storeMessage = (message, from) => {
  * @returns 
  */
 const getOpenTicketsFrom = async (id) => {
-    return (await connection.promise().query('SELECT * FROM `tickets` WHERE (status="LOADING" AND `from`=?);', [id]))[0];
+    return (await connection.promise().query('SELECT * FROM `tickets` WHERE (status="CARGANDO" AND `from`=?);', [id]))[0];
 };
 
 /**
@@ -55,7 +55,7 @@ const getOpenTicketsFrom = async (id) => {
  */
 const openNewTicket = (from, messages) => {
     return connection.promise().query('INSERT INTO `tickets` (`from`, `messages`, `status`, `notes`) VALUES (?, ?, ?, ?);', 
-        [from, messages, 'LOADING', '']
+        [from, messages, 'CARGANDO', '']
     );
 };
 
@@ -77,11 +77,11 @@ const getAllLoadingTickets = async () => {
 };
 
 /**
- * Mueve el ticket de LOADING a OPEN
+ * Mueve el ticket de CARGANDO a ABIERTO
  * @param {*} id 
  */
 const moveTicketToOpen = (id) => {
-    connection.promise().query('UPDATE `tickets` SET `status`="OPEN" WHERE id=?;', [id]);
+    connection.promise().query('UPDATE `tickets` SET `status`="ABIERTO" WHERE id=?;', [id]);
 };
 
 /**

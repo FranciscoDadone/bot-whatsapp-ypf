@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class PhoneNumber extends Model
+class Message extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -18,13 +17,9 @@ class PhoneNumber extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'surname',
-        'station',
-        'description',
-        'number',
-        'number_from',
-        'created_at'
+        'from',
+        'message',
+        'date'
     ];
 
     /**
@@ -33,6 +28,6 @@ class PhoneNumber extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'created_at' => 'datetime',
+        'date' => 'datetime'
     ];
 }
