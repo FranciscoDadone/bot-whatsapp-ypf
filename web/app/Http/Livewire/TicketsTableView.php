@@ -36,9 +36,9 @@ class TicketsTableView extends TableView
     public function row($model)
     {
         $color = '';
-        if ($model->status == 'CARGANDO') $color = 'orange';
-        else if ($model->status == 'ABIERTO') $color = 'green';
-        else if ($model->status == 'CERRADO') $color = 'gray';
+        if ($model->status == 'CARGANDO') $color = '#ffd23d';
+        else if ($model->status == 'ABIERTO') $color = '#47ed73';
+        else if ($model->status == 'CERRADO') $color = '#b8b8b8';
 
         return [
             $model->id,
