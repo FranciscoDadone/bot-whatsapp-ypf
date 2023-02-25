@@ -35,11 +35,16 @@ class TicketsTableView extends TableView
 
     public function row($model)
     {
+        $color = '';
+        if ($model->status == 'CARGANDO') $color = 'orange';
+        else if ($model->status == 'ABIERTO') $color = 'green';
+        else if ($model->status == 'CERRADO') $color = 'gray';
+
         return [
             $model->id,
             $model->from()->value('name') . ' ' . $model->from()->value('surname'),
             substr($model->messages()[count($model->messages()) - 1]->message, 0, 50),
-            $model->status,
+            "<div style='background-color: $color; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;'>$model->status</div>",
             $model->updated_at,
             '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button onclick="deleteTicket(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
         ];

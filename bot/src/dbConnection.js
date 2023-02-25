@@ -48,7 +48,7 @@ const getOpenTicketsFrom = async (id) => {
 };
 
 /**
- * Abre un nuevo ticket con el estado de LOADING
+ * Abre un nuevo ticket con el estado de CARGANDO
  * @param {*} from 
  * @param {Mensajes separados por coma} messages 
  * @returns 
@@ -69,11 +69,11 @@ const addNewMessageToTicket = (ticketId, messageId) => {
 }
 
 /**
- * Devuelve todos los tickets que están como LOADING
+ * Devuelve todos los tickets que están como CARGANDO
  * @returns 
  */
 const getAllLoadingTickets = async () => {
-    return (await connection.promise().query('SELECT * FROM `tickets` WHERE status="LOADING";'))[0];
+    return (await connection.promise().query('SELECT * FROM `tickets` WHERE status="CARGANDO";'))[0];
 };
 
 /**
