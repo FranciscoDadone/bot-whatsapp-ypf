@@ -1,6 +1,6 @@
 FROM php:8.1-fpm-alpine
 
-RUN apk add --no-cache nginx wget libzip libzip-dev libpng libpng-dev libxml2-dev libjpeg freetype-dev libwebp-dev libjpeg-turbo-dev
+RUN apk add --no-cache nginx wget libzip libzip-dev libpng libpng-dev libxml2-dev libjpeg freetype-dev libwebp-dev libjpeg-turbo-dev npm
 RUN mkdir -p /run/nginx
 
 COPY docker/nginx.conf /etc/nginx/nginx.conf
@@ -19,6 +19,8 @@ RUN cd /app && \
     /usr/local/bin/composer install
 
 RUN chown -R www-data: /app
+
+RUN npm i && npm run build
 
 CMD sh /app/docker/startup.sh
 
