@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/configuracion/numeros/new', [ConfigurationController::class, 'new_number'])->name('configuracion.numeros.new');
 
     Route::post('/tickets/delete/{id}', [TicketsController::class, 'delete'])->name('tickets.delete');
+    Route::get('/ticket/ver/{id}', [TicketsController::class, 'view_ticket'])->name('ticket.view_ticket');
 });
 
 require __DIR__.'/auth.php';

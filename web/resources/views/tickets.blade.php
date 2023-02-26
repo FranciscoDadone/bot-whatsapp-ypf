@@ -39,7 +39,6 @@
             </div>
         </div>
     </div>
-
 </x-app-layout>
 <script>
     let idDelete = 0;
@@ -62,6 +61,6 @@
     }
 
     function verTicket(id) {
-
+        window.location.href = `/ticket/ver/${id}`;
     }
 </script>
