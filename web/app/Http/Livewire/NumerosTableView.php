@@ -30,6 +30,7 @@ class NumerosTableView extends TableView
             Header::title('ESTACIÓN')->sortBy('station'),
             'DESCRIPCIÓN',
             'NÚMERO',
+            'NÚMERO INT.',
             ""
         ];
     }
@@ -42,7 +43,8 @@ class NumerosTableView extends TableView
             UI::editable($model, 'station'),
             UI::editable($model, 'description'),
             UI::editable($model, 'number'),
-            '<button onclick="deleteNum(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
+            UI::editable($model, 'number_from'),
+            '<button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ', ' . $model->number . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
         ];
     }
 

@@ -18,7 +18,32 @@
         </div>
     </div>
 
-    <!-- Modal New -->
+<!-- Modal Delete -->
+<div id="OpenPopUpDelete" class="modal fade p-0">
+    <div class="modal-dialog modal-login" style="max-width: 720px;">
+        <div class="modal-content">
+            <div class="rounded-lg shadow-lg">
+                <div class="bg-white mb-2 mt-6">
+                    <div class="bg-white">
+                        <div class="mt-4 text-center mx-4">
+                            <h4 class="uppercase" id="title-delete">¿Seguro quiere eliminar a ?</h4>
+                        </div>
+                    </div>
+                    <div class="px-4 pt-3 pb-2 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Cancelar
+                        </button>
+                        <button onclick="deleteNum()" class="btn btn-danger" id="btn-delete">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal New -->
 <div id="OpenPopUpNew" class="modal fade p-0">
     <div class="modal-dialog modal-login" style="max-width: 720px;">
         <div class="modal-content">
@@ -67,18 +92,25 @@
         </div>
     </div>
 </div>
+
 </x-app-layout>
 <script>
-    function deleteNum(id) {
-                $.ajax({
-                    type: "POST",
-                    url: `/configuracion/numeros/delete/${id}`,
-                    success:function(datos){
-                        window.location.href = '/configuracion/numeros';
-                    },
-                    error: function(err) {
-                        console.log(err)
-                    }
-                })
+    let idDelete = 0;
+    function deleteNum() {
+        $.ajax({
+            type: "POST",
+            url: `/configuracion/numeros/delete/${idDelete}`,
+            success:function(datos){
+                window.location.href = '/configuracion/numeros';
+            },
+            error: function(err) {
+                console.log(err)
             }
+        })
+    }
+
+    function cargarDatosDelete(id, num) {
+        $('#title-delete').text(`¿Seguro quiere eliminar a ${num}?`);
+        idDelete = id;
+    }
 </script>
