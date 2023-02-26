@@ -46,7 +46,7 @@ class TicketsTableView extends TableView
             substr($model->messages()[count($model->messages()) - 1]->message, 0, 50),
             "<div style='background-color: $color; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;'>$model->status</div>",
             $model->updated_at,
-            '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button onclick="deleteTicket(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
+            '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
         ];
     }
 }
