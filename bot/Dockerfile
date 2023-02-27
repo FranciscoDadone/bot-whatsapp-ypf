@@ -21,6 +21,9 @@ COPY ./src ./src
 
 RUN mkdir /.wwebjs_auth && mkdir /.wwebjs_auth/session
 
+RUN mkdir /media
+RUN chmod 777 -R /media
+
 RUN npm i \
     && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \

@@ -25,7 +25,15 @@
                 </h1>
                 @foreach ($ticket->messages() as $message)
                 <div class="my-1 p-6 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    @if (str_contains($message->message, 'media/'))
+                        @if (str_contains($message->message, '.png'))
+                        <img src="{{ asset($message->message) }}" />
+                        @else if(str_contains($message->message, '.mp4'))
+                        <video src="{{ asset($message->message) }}" />
+                        @endif
+                    @else
                     {{ $message->message }}
+                    @endif
                 </div>
                 @endforeach
             </div>

@@ -2,7 +2,7 @@ version: "3"
 
 volumes:
   whatsapp-session:
-  datafiles:
+  media:
 
 services:
   bot:
@@ -15,6 +15,7 @@ services:
       BROWSER_URL: 'ws://browser:3000'
     volumes:
       - whatsapp-session:/.wwebjs_auth/session
+      - media:/media
     command: npm run start
     restart: unless-stopped
     depends_on:
@@ -57,6 +58,7 @@ services:
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+      - media:/public/media
     networks:
       - network
 

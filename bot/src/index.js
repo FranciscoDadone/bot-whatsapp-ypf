@@ -1,5 +1,6 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
+var fs = require('fs');
 const { 
     connect, 
     getRegisteredNumbersLike, 
@@ -79,11 +80,31 @@ client.on('message', async (message) => {
     const number = message.from.split('@')[0].substring(3);
     const numbersLike = (await getRegisteredNumbersLike(number))[0];
 
+    
     // No hay números registrados a ese número.
     if (!numbersLike.length) return;
     if (numbersLike[0].number_from == null) setNumberFrom(numbersLike[0].id, message.from);
     const userId = numbersLike[0].id;
-    const msgId = (await storeMessage(message.body, userId))[0].insertId;
+    let msgId = null;
+    
+    if (message.hasMedia) {
+        const media = await message.downloadMedia();
+        const mediaType = (message.type == 'image') ? 'png' : 'mp4';
+        fs.writeFile(
+            `../media/${userId}-${message.timestamp}.${mediaType}`,
+            media.data,
+            "base64",
+            (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            }
+        );
+        msgId = (await storeMessage(`media/${userId}-${message.timestamp}.png`, userId))[0].insertId;
+    } else {
+        msgId = (await storeMessage(message.body, userId))[0].insertId;
+    }
+
     const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
 
     // Cerrar ticket

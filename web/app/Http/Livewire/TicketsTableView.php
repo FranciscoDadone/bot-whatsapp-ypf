@@ -40,10 +40,17 @@ class TicketsTableView extends TableView
         else if ($model->status == 'ABIERTO') $color = '#47ed73';
         else if ($model->status == 'CERRADO') $color = '#b8b8b8';
 
+        $last_message = $model->messages()[count($model->messages()) - 1]->message;
+
+        if (str_contains($last_message, 'media/')) {
+            if (str_contains($last_message, '.png')) $media = '( IMAGEN )';
+            else if (str_contains($last_message, '.mp4')) $media = '( VIDEO )';
+        }
+
         return [
             $model->id,
             $model->from()->value('name') . ' ' . $model->from()->value('surname'),
-            substr($model->messages()[count($model->messages()) - 1]->message, 0, 50),
+            $media ?? substr($last_message, 0, 50),
             "<div style='background-color: $color; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;'>$model->status</div>",
             date_format(date_create($model->updated_at), 'd/m/Y H:i:s'),
             '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
