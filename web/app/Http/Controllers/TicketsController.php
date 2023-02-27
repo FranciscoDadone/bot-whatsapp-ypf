@@ -19,9 +19,15 @@ class TicketsController extends Controller
         $color_ticket = '';
         if ($ticket->status == 'CARGANDO') $color_ticket = '#ffd23d';
         else if ($ticket->status == 'ABIERTO') $color_ticket = '#47ed73';
+        else if ($ticket->status == 'EN_PROCESO') $color_ticket = '#fcf453';
         else if ($ticket->status == 'CERRADO') $color_ticket = '#b8b8b8';
 
-
         return view('ticket', compact('ticket', 'color_ticket'));
+    }
+
+    public function change_status($id, $status) {
+        Ticket::where('id', $id)->update([
+            'status' => $status
+        ]);
     }
 }

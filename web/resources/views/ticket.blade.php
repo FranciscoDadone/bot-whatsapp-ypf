@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <select style='padding-left: 1em; padding-right: 1em; font-size: 1rem; display: inline; background-color: {{ $color_ticket }}; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;' class="form-select">
-                <option value="abierto">Abierto</option>
-                <option style="background-color: #bababa;" value="cerrado">Cerrado</option>
-                <option style="background-color: #fcf453;" value="en-proceso">En proceso</option>
+            <select style='padding-left: 1em; padding-right: 1em; font-size: 1rem; display: inline; background-color: {{ $color_ticket }}; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;' class="form-select" id="select-status">
+                <option value="ABIERTO">Abierto</option>
+                <option style="background-color: #fcf453;" value="EN_PROCESO">En proceso</option>
+                <option style="background-color: #b8b8b8;" value="CERRADO">Cerrado</option>
             </select>
             Ticket #{{$ticket->id}}
         </h2>
@@ -53,5 +53,29 @@
     </div>
 </x-app-layout>
 <script>
+    $('#select-status').on('change', (ev) => {
+        const status = ev.target.value;
 
+        let color;
+        switch (status) {
+            case 'ABIERTO':
+                color = '#47ed73';
+                break;
+            case 'EN_PROCESO':
+                color = '#fcf453';
+                break;
+            case 'CERRADO':
+                color = '#b8b8b8';
+                break;
+        }
+        $('#select-status').css('background-color', color);
+        $.ajax({
+            type: "POST",
+            url: `/ticket/{{ $ticket->id }}/status/${status}`,
+            success: function(){},
+            error: function(err) {
+                console.log(err)
+            }
+        })
+    });
 </script>
