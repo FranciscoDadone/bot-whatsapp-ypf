@@ -27,9 +27,17 @@
                 <div class="my-1 p-6 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     @if (str_contains($message->message, 'media/'))
                         @if (str_contains($message->message, '.png'))
-                        <img src="{{ asset($message->message) }}" />
-                        @else if(str_contains($message->message, '.mp4'))
-                        <video src="{{ asset($message->message) }}" />
+                        <img src="{{ asset($message->message) }}" style="max-height: 80vh;" />
+                        @elseif(str_contains($message->message, '.mp4'))
+                        <video src="{{ asset($message->message) }}" type="video/mp4" controls />
+                        @else
+                        <?php
+                        $filename = explode('/', $message->message)[count(explode('/', $message->message)) - 1];
+                        ?>
+                        <a style="background-color: #91ffde; border-radius: 1em; padding: 0.5em;" href="{{ asset($message->message) }}" download="{{ $filename }}">
+                            <i class="fa fa-download"></i>
+                            {{ $filename }}
+                        </a>
                         @endif
                     @else
                     {{ $message->message }}

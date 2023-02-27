@@ -89,9 +89,22 @@ client.on('message', async (message) => {
     
     if (message.hasMedia) {
         const media = await message.downloadMedia();
-        const mediaType = (message.type == 'image') ? 'png' : 'mp4';
+        let mediaType;
+
+        switch (message.type) {
+            case 'image':
+                mediaType = 'png';
+                break;
+            case 'video':
+                mediaType = 'mp4';
+                break;
+        }
+        
+        console.log(media)
+        const filename = (media.filename) ? media.filename : `${userId}-${message.timestamp}.${mediaType}`;
+
         fs.writeFile(
-            `../media/${userId}-${message.timestamp}.${mediaType}`,
+            `../media/${filename}`,
             media.data,
             "base64",
             (err) => {
@@ -100,7 +113,7 @@ client.on('message', async (message) => {
                 }
             }
         );
-        msgId = (await storeMessage(`media/${userId}-${message.timestamp}.png`, userId))[0].insertId;
+        msgId = (await storeMessage(`media/${filename}`, userId))[0].insertId;
     } else {
         msgId = (await storeMessage(message.body, userId))[0].insertId;
     }

@@ -26,7 +26,7 @@ class TicketsTableView extends TableView
         return [
             Header::title('ID')->sortBy('id'),
             Header::title('DE')->sortBy('from'),
-            Header::title('ÚLTIMO MENSAJE')->sortBy('messages'),
+            Header::title('ÚLTIMO MENSAJE'),
             Header::title('ESTADO')->sortBy('status'),
             Header::title('ÚLTIMA ACTUALIZACIÓN')->sortBy('updated_at'),
             ""
