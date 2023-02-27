@@ -11,9 +11,14 @@
 
     <div style="display: flex; height: 100%;">
         <div style="width: 20%;" class="py-2 px-2 my-2 mx-2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            adsa
+            <img src="{{ $ticket->from()->value('profile_pic') }}" style="border-radius: 10em;" />
+            <br>
+            <hr>
+            <br>
+            <p class="text-sm">Creación: {{ date_format(date_create($ticket->created_at), 'd/m/Y H:i:s') }}</p>
+            <p class="text-sm">Ult. actualización: {{ date_format(date_create($ticket->updated_at), 'd/m/Y H:i:s') }}</p>
         </div>
-        <div class="py-2 bg-gray-400" style="width: 80%; height: 100%">
+        <div class="py-2 bg-gray-400" style="width: 80%; height: 100%; border-radius: 1em;">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="height: 100%">
                 <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight py-3">
                     Mensajes

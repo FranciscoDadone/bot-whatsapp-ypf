@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('number');
             $table->string('number_from')->nullable();
+            $table->string('profile_pic')->nullable();
             $table->boolean('deleted')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

@@ -11,7 +11,8 @@ const {
     moveTicketToOpen,
     setNumberFrom,
     getNumberById,
-    deleteTicketById
+    deleteTicketById,
+    setProfilePicURL
 } = require('./dbConnection');
 
 
@@ -103,8 +104,13 @@ client.on('message', async (message) => {
         return;
     }
 
-    if (openTicketFromUser == undefined) { // No existe un ticket ya abierto cargando datos -> crear ticket
+    if (openTicketFromUser == undefined) { // No existe un ticket ya abierto cargando datos -> crear ticket y actualizar foto de perfil
         const ticketId = (await openNewTicket(userId, msgId))[0].insertId;
+
+        const contact = await message.getContact();
+        const profilePicURL = await contact.getProfilePicUrl();
+        setProfilePicURL(userId, profilePicURL);
+
         client.sendMessage(message.from,
             `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _terminarticket_ \n O para eliminarlo _eliminarticket_`
         )

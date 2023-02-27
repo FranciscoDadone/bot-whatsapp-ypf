@@ -90,8 +90,16 @@ const moveTicketToOpen = (id) => {
  * @param {*} from 
  */
 const setNumberFrom = (id, from) => {
-    console.log(from, id)
     connection.promise().query('UPDATE `phone_numbers` SET `number_from`=? WHERE id=?;', [from, id]);
+};
+
+/**
+ * Asigna la url de la foto de perfil.
+ * @param {*} id 
+ * @param {*} url 
+ */
+const setProfilePicURL = (id, url) => {
+    connection.promise().query('UPDATE `phone_numbers` SET `profile_pic`=? WHERE id=?;', [url, id]);
 };
 
 const getNumberById = async (id) => {
@@ -130,5 +138,6 @@ module.exports = {
     getNumberById,
     deleteTicketById,
     getTicketById,
-    deleteMessageById
+    deleteMessageById,
+    setProfilePicURL
 }
