@@ -2,9 +2,9 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             <select style='padding-left: 1em; padding-right: 1em; font-size: 1rem; display: inline; background-color: {{ $color_ticket }}; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;' class="form-select" id="select-status">
-                <option value="ABIERTO">Abierto</option>
-                <option style="background-color: #fcf453;" value="EN_PROCESO">En proceso</option>
-                <option style="background-color: #b8b8b8;" value="CERRADO">Cerrado</option>
+                <option @if($ticket->status == 'ABIERTO') selected @endif value="ABIERTO">Abierto</option>
+                <option @if($ticket->status == 'EN_PROCESO') selected @endif style="background-color: #fcf453;" value="EN_PROCESO">En proceso</option>
+                <option @if($ticket->status == 'CERRADO') selected @endif style="background-color: #b8b8b8;" value="CERRADO">Cerrado</option>
             </select>
             Ticket #{{$ticket->id}}
         </h2>
