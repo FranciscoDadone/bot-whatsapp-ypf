@@ -121,7 +121,7 @@ client.on('message', async (message) => {
     const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
 
     // Cerrar ticket
-    if (message.body.toLowerCase() == 'terminarticket') {
+    if (message.body.toLowerCase() == 'terminarticket' && openTicketFromUser) {
         moveTicketToOpen(openTicketFromUser.id);
         client.sendMessage(message.from, 
             `Ticket *#${openTicketFromUser.id}* guardado!`
@@ -130,7 +130,7 @@ client.on('message', async (message) => {
     }
 
     // Eliminar ticket
-    if (message.body.toLowerCase() == 'eliminarticket') {
+    if (message.body.toLowerCase() == 'eliminarticket' && openTicketFromUser) {
         deleteTicketById(openTicketFromUser.id);
         client.sendMessage(message.from, 
             `Ticket *#${openTicketFromUser.id}* eliminado.`

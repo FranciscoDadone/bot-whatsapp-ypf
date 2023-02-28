@@ -1,11 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <select style='padding-left: 1em; padding-right: 1em; font-size: 1rem; display: inline; background-color: {{ $color_ticket }}; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;' class="form-select" id="select-status">
-                <option @if($ticket->status == 'ABIERTO') selected @endif value="ABIERTO">Abierto</option>
+            @if ($ticket->status != 'CARGANDO')
+            <select style='padding-left: 0.6em; padding-right: 1em; font-size: 1rem; display: inline; background-color: {{ $color_ticket }}; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;' class="form-select" id="select-status">
+                <option @if($ticket->status == 'ABIERTO') selected @endif style="background-color: #47ed73;" value="ABIERTO">Abierto</option>
                 <option @if($ticket->status == 'EN_PROCESO') selected @endif style="background-color: #fcf453;" value="EN_PROCESO">En proceso</option>
                 <option @if($ticket->status == 'CERRADO') selected @endif style="background-color: #b8b8b8;" value="CERRADO">Cerrado</option>
             </select>
+            @else
+            <h2 style='margin-right: 0.3em; padding-left: 1em; padding-right: 0.6em; font-size: 1rem; display: inline; background-color: {{ $color_ticket }}; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;'>
+                Cargando
+            </h2>
+            @endif
             Ticket #{{$ticket->id}}
         </h2>
         <h2 style="margin-top: 0.4em; margin-left: 0.4em; color: gray;" class="font-semibold text-sm text-gray-800 dark:text-gray-200 leading-tight">
