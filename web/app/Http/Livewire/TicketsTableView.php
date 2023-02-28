@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Filters\StatusFilter;
 use LaravelViews\Views\TableView;
 use App\Models\Ticket;
 use LaravelViews\Facades\Header;
+use Okipa\LaravelTable\Filters\ValueFilter;
+use Okipa\LaravelTable\Livewire\Table;
 
 
 class TicketsTableView extends TableView
@@ -15,6 +18,7 @@ class TicketsTableView extends TableView
     protected $model = Ticket::class;
     public $searchBy = ['from', 'status', 'updated_at'];
     protected $paginate = 20;
+    public $placeholder = 'Buscar';
 
     protected function repository()
     {
@@ -60,4 +64,11 @@ class TicketsTableView extends TableView
             '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
         ];
     }
+
+    protected function filters()
+{
+    return [
+        new StatusFilter
+    ];
+}
 }
