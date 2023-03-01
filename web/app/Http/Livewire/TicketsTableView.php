@@ -55,13 +55,16 @@ class TicketsTableView extends TableView
         $status = $model->status;
         if ($model->status == 'EN_PROCESO') $status = 'EN PROCESO';
 
+        $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>';
+        if ($model->status == 'CARGANDO') $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button>';
+
         return [
             $model->id,
             $model->from()->value('name') . ' ' . $model->from()->value('surname'),
             $media ?? substr($last_message, 0, 50),
             "<div style='background-color: $color; text-align: center; border-radius: 1em; padding-top: 0.5em; padding-bottom: 0.4em;'>$status</div>",
             date_format(date_create($model->updated_at), 'd/m/Y H:i:s'),
-            '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>'
+            $buttons
         ];
     }
 
