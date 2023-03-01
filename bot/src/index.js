@@ -80,14 +80,22 @@ client.on('message', async (message) => {
     const number = message.from.split('@')[0].substring(3);
     const numbersLike = (await getRegisteredNumbersLike(number))[0];
 
-    
+    console.log(message)
     // No hay números registrados a ese número.
-    if (!numbersLike.length) return;
+    if (!numbersLike.length || (
+        message.type != 'chat' && 
+        message.type != 'image' && 
+        message.type != 'document' && 
+        message.type != 'video' && 
+        message.type != 'location'
+        )) return;
     if (numbersLike[0].number_from == null) setNumberFrom(numbersLike[0].id, message.from);
     const userId = numbersLike[0].id;
     let msgId = null;
     
-    if (message.hasMedia) {
+    
+
+    if (message.hasMedia && (message.type == 'video' || message.type == 'image' || message.type == 'document')) {
         const media = await message.downloadMedia();
         let mediaType;
 
@@ -100,7 +108,6 @@ client.on('message', async (message) => {
                 break;
         }
         
-        console.log(media)
         const filename = (media.filename) ? media.filename : `${userId}-${message.timestamp}.${mediaType}`;
 
         fs.writeFile(
@@ -114,7 +121,9 @@ client.on('message', async (message) => {
             }
         );
         msgId = (await storeMessage(`media/${filename}`, userId))[0].insertId;
-    } else {
+    } else if (message.type == 'location') {
+        msgId = (await storeMessage(`https://www.google.com/maps/search/?api=1&query=${message.location.latitude},${message.location.longitude}`, userId))[0].insertId;
+    } else if (message.type == 'chat') {
         msgId = (await storeMessage(message.body, userId))[0].insertId;
     }
 
