@@ -80,7 +80,6 @@ client.on('message', async (message) => {
     const number = message.from.split('@')[0].substring(3);
     const numbersLike = (await getRegisteredNumbersLike(number))[0];
 
-    console.log(message)
     // No hay números registrados a ese número.
     if (!numbersLike.length || (
         message.type != 'chat' && 
