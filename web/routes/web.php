@@ -30,16 +30,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/configuracion/numeros', [ConfigurationController::class, 'numeros'])->name('configuracion.numeros');
-    Route::post('/configuracion/numeros/delete/{id}', [ConfigurationController::class, 'delete_number'])->name('configuracion.numeros.delete');
-    Route::post('/configuracion/numeros/new', [ConfigurationController::class, 'new_number'])->name('configuracion.numeros.new');
+    Route::get('/configuracion/numeros', [ConfigurationController::class, 'numeros'])->name('configuracion.numeros')->middleware('permissions:1');
+    Route::post('/configuracion/numeros/delete/{id}', [ConfigurationController::class, 'delete_number'])->name('configuracion.numeros.delete')->middleware('permissions:1');
+    Route::post('/configuracion/numeros/new', [ConfigurationController::class, 'new_number'])->name('configuracion.numeros.new')->middleware('permissions:1');
 
-    Route::post('/tickets/delete/{id}', [TicketsController::class, 'delete'])->name('tickets.delete');
+    Route::post('/tickets/delete/{id}', [TicketsController::class, 'delete'])->name('tickets.delete')->middleware('permissions:1');
     Route::get('/ticket/ver/{id}', [TicketsController::class, 'view_ticket'])->name('ticket.view_ticket');
     Route::post('/ticket/{id}/status/{status}', [TicketsController::class, 'change_status'])->name('ticket.change_status');
 
-    Route::get('/usuarios', [UsersController::class, 'usuarios'])->name('usuarios');
-    Route::post('/usuarios/new', [UsersController::class, 'new'])->name('usuarios.new');
+    Route::get('/usuarios', [UsersController::class, 'usuarios'])->name('usuarios')->middleware('permissions:1');
+    Route::post('/usuarios/new', [UsersController::class, 'new'])->name('usuarios.new')->middleware('permissions:1');
 });
 
 require __DIR__.'/auth.php';
