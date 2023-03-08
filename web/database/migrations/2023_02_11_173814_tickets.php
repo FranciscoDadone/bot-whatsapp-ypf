@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->integer('from');
+            $table->integer('assigned_to')->nullable()->default(null);
             $table->string('messages');
             $table->string('status');
             $table->string('notes');

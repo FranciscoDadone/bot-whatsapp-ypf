@@ -20,6 +20,7 @@ class Ticket extends Model
      */
     protected $fillable = [
         'from',
+        'assigned_to',
         'messages',
         'status',
         'notes',
@@ -51,5 +52,10 @@ class Ticket extends Model
         }
 
         return $arr;
+    }
+
+    public function getAssigned() {
+        if ($this->assigned_to == null) return null;
+        return User::where([['id', $this->assigned_to]]);
     }
 }

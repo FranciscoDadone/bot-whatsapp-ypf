@@ -22,7 +22,10 @@ class TicketsTableView extends TableView
 
     protected function repository()
     {
-        return Ticket::where([['status', '!=', 'ELIMINADO']])->orderBy('id', 'desc');
+        if (hasPermission(1)) {
+            return Ticket::where([['status', '!=', 'ELIMINADO']])->orderBy('id', 'desc');
+        }
+        return Ticket::where([['status', '!=', 'ELIMINADO'], ['assigned_to', auth()->user()->id]])->orderBy('id', 'desc');
     }
 
     public function headers(): array
@@ -54,9 +57,10 @@ class TicketsTableView extends TableView
 
         $status = $model->status;
         if ($model->status == 'EN_PROCESO') $status = 'EN PROCESO';
+        if ($model->assigned_to != null && hasPermission(1)) $status = "Delegado ($status)";
 
         $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>';
-        if ($model->status == 'CARGANDO') $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button>';
+        if ($model->status == 'CARGANDO' || !hasPermission(1)) $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button>';
 
         return [
             $model->id,
