@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\TicketsController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/tickets/delete/{id}', [TicketsController::class, 'delete'])->name('tickets.delete');
     Route::get('/ticket/ver/{id}', [TicketsController::class, 'view_ticket'])->name('ticket.view_ticket');
     Route::post('/ticket/{id}/status/{status}', [TicketsController::class, 'change_status'])->name('ticket.change_status');
+
+    Route::get('/usuarios', [UsersController::class, 'usuarios'])->name('usuarios');
+    Route::post('/usuarios/new', [UsersController::class, 'new'])->name('usuarios.new');
 });
 
 require __DIR__.'/auth.php';
