@@ -51,6 +51,7 @@ services:
       - ./web/database:/app/database
       - ./web/public:/app/public
       - ./web/app:/app/app
+      - ./web/storage:/app/storage
       - ./web/resources:/app/resources
       - ./web/routes:/app/routes
       - "/etc/timezone:/etc/timezone:ro"

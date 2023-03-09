@@ -19,6 +19,7 @@ class Message extends Model
     protected $fillable = [
         'from',
         'message',
+        'ticket_id',
         'date'
     ];
 

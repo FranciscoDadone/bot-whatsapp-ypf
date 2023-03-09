@@ -14,10 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->unsigned()->autoIncrement();
             $table->integer('from');
             $table->integer('assigned_to')->nullable()->default(null);
-            $table->string('messages');
             $table->string('status');
             $table->string('notes');
             $table->timestamp('created_at')->useCurrent();

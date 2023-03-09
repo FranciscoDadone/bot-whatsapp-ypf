@@ -21,7 +21,6 @@ class Ticket extends Model
     protected $fillable = [
         'from',
         'assigned_to',
-        'messages',
         'status',
         'notes',
         'created_at',
@@ -44,14 +43,7 @@ class Ticket extends Model
 
     public function messages()
     {
-        $arr = array();
-        $messages = explode(',', $this->messages);
-
-        foreach ($messages as $message) {
-            $arr[] = Message::find($message);
-        }
-
-        return $arr;
+        return Message::where([['ticket_id', $this->id]])->get();
     }
 
     public function getAssigned() {

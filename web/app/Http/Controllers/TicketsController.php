@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TicketsController extends Controller
@@ -22,12 +23,25 @@ class TicketsController extends Controller
         else if ($ticket->status == 'EN_PROCESO') $color_ticket = '#fcf453';
         else if ($ticket->status == 'CERRADO') $color_ticket = '#b8b8b8';
 
-        return view('ticket', compact('ticket', 'color_ticket'));
+        $users = User::where([['id', '!=', auth()->user()->id]])->get();
+
+        return view('ticket', compact('ticket', 'color_ticket', 'users'));
     }
 
     public function change_status($id, $status) {
         Ticket::where('id', $id)->update([
             'status' => $status
         ]);
+    }
+
+    public function assign_ticket(Request $request) {
+        $ticket_id = $request->ticket_id;
+        $user_id = $request->user;
+
+        Ticket::where([['id', $ticket_id]])->update([
+            'assigned_to' => $user_id
+        ]);
+
+        return back();
     }
 }

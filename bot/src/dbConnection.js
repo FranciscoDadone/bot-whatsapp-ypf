@@ -21,8 +21,8 @@ const connect = () => {
 
 /**
  * Devuelve números similares guardados.
- * @param {Número de whatsapp} number 
- * @returns 
+ * @param {Número de whatsapp} number
+ * @returns
  */
 const getRegisteredNumbersLike = (number) => {
     return connection.promise().query('SELECT `id`, `number_from` FROM `phone_numbers` WHERE deleted=0 AND number LIKE ?;', ['%' + number]);
@@ -30,18 +30,18 @@ const getRegisteredNumbersLike = (number) => {
 
 /**
  * Guarda el mensaje en 'mensajes'
- * @param {*} message 
- * @param {Remitente del mensaje} from 
- * @returns 
+ * @param {*} message
+ * @param {Remitente del mensaje} from
+ * @returns
  */
-const storeMessage = (message, from) => {
-    return connection.promise().query('INSERT INTO `messages` (`from`, `message`) VALUES (?, ?);', [from, message]);
+const storeMessage = (message, from, ticket_id) => {
+    return connection.promise().query('INSERT INTO `messages` (`from`, `message`, `ticket_id`) VALUES (?, ?, ?);', [from, message, ticket_id]);
 };
 
 /**
  * Retorna todos los tickets abiertos (CARGANDO_DATOS) del usuario.
- * @param {user} id 
- * @returns 
+ * @param {user} id
+ * @returns
  */
 const getOpenTicketsFrom = async (id) => {
     return (await connection.promise().query('SELECT * FROM `tickets` WHERE (status="CARGANDO" AND `from`=?);', [id]))[0];
@@ -49,28 +49,19 @@ const getOpenTicketsFrom = async (id) => {
 
 /**
  * Abre un nuevo ticket con el estado de CARGANDO
- * @param {*} from 
- * @param {Mensajes separados por coma} messages 
- * @returns 
+ * @param {*} from
+ * @param {Mensajes separados por coma} messages
+ * @returns
  */
-const openNewTicket = (from, messages) => {
-    return connection.promise().query('INSERT INTO `tickets` (`from`, `messages`, `status`, `notes`) VALUES (?, ?, ?, ?);', 
-        [from, messages, 'CARGANDO', '']
+const openNewTicket = (from) => {
+    return connection.promise().query('INSERT INTO `tickets` (`from`, `status`, `notes`) VALUES (?, ?, ?);',
+        [from, 'CARGANDO', '']
     );
 };
 
 /**
- * Agregar un mensaje a un ticket
- * @param {*} ticketId 
- * @param {*} messageId 
- */
-const addNewMessageToTicket = (ticketId, messageId) => {
-    connection.promise().query('UPDATE `tickets` SET `messages` = CONCAT(messages, ?), `created_at`=CURRENT_TIMESTAMP WHERE id=?;', [`,${messageId}`, ticketId]);
-}
-
-/**
  * Devuelve todos los tickets que están como CARGANDO
- * @returns 
+ * @returns
  */
 const getAllLoadingTickets = async () => {
     return (await connection.promise().query('SELECT * FROM `tickets` WHERE status="CARGANDO";'))[0];
@@ -78,7 +69,7 @@ const getAllLoadingTickets = async () => {
 
 /**
  * Mueve el ticket de CARGANDO a ABIERTO
- * @param {*} id 
+ * @param {*} id
  */
 const moveTicketToOpen = (id) => {
     connection.promise().query('UPDATE `tickets` SET `status`="ABIERTO" WHERE id=?;', [id]);
@@ -86,8 +77,8 @@ const moveTicketToOpen = (id) => {
 
 /**
  * Asigna el valor real del número de teléfono al usuario.
- * @param {*} id 
- * @param {*} from 
+ * @param {*} id
+ * @param {*} from
  */
 const setNumberFrom = (id, from) => {
     connection.promise().query('UPDATE `phone_numbers` SET `number_from`=? WHERE id=?;', [from, id]);
@@ -95,8 +86,8 @@ const setNumberFrom = (id, from) => {
 
 /**
  * Asigna la url de la foto de perfil.
- * @param {*} id 
- * @param {*} url 
+ * @param {*} id
+ * @param {*} url
  */
 const setProfilePicURL = (id, url) => {
     connection.promise().query('UPDATE `phone_numbers` SET `profile_pic`=? WHERE id=?;', [url, id]);
@@ -117,7 +108,7 @@ const deleteMessageById = (id) => {
 const deleteTicketById = async (id) => {
     const ticket = await getTicketById(id);
     const messages = ticket.messages.split(',');
-    
+
     messages.forEach((message) => {
         deleteMessageById(message);
     });
@@ -126,12 +117,11 @@ const deleteTicketById = async (id) => {
 }
 
 module.exports = {
-    connect, 
-    storeMessage, 
+    connect,
+    storeMessage,
     getRegisteredNumbersLike,
     getOpenTicketsFrom,
     openNewTicket,
-    addNewMessageToTicket,
     getAllLoadingTickets,
     moveTicketToOpen,
     setNumberFrom,

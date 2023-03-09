@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tickets/delete/{id}', [TicketsController::class, 'delete'])->name('tickets.delete')->middleware('permissions:1');
     Route::get('/ticket/ver/{id}', [TicketsController::class, 'view_ticket'])->name('ticket.view_ticket');
     Route::post('/ticket/{id}/status/{status}', [TicketsController::class, 'change_status'])->name('ticket.change_status');
+    Route::post('/ticket/assign_ticket', [TicketsController::class, 'assign_ticket'])->name('ticket.assign');
 
     Route::get('/usuarios', [UsersController::class, 'usuarios'])->name('usuarios')->middleware('permissions:1');
     Route::post('/usuarios/new', [UsersController::class, 'new'])->name('usuarios.new')->middleware('permissions:1');

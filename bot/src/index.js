@@ -1,13 +1,12 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 var fs = require('fs');
-const { 
-    connect, 
-    getRegisteredNumbersLike, 
-    storeMessage, 
-    getOpenTicketsFrom, 
-    openNewTicket, 
-    addNewMessageToTicket,
+const {
+    connect,
+    getRegisteredNumbersLike,
+    storeMessage,
+    getOpenTicketsFrom,
+    openNewTicket,
     getAllLoadingTickets,
     moveTicketToOpen,
     setNumberFrom,
@@ -39,13 +38,13 @@ setTimeout(init, 5000);
 
 const checkLoadingTicket = async () => {
     const loadingTickets = await getAllLoadingTickets();
-    
+
     loadingTickets.forEach(async (ticket) => {
         const dateDiff = ((new Date() - ticket.created_at) / 1000) / 60;
         if (dateDiff >= 5) {
             moveTicketToOpen(ticket.id);
             const numberFrom = (await getNumberById(ticket.from))[0].number_from;
-            client.sendMessage(numberFrom, 
+            client.sendMessage(numberFrom,
                 `Ticket *#${ticket.id}* guardado!`
             );
         }
@@ -64,14 +63,14 @@ client.on('ready', async () => {
 
 client.on('authenticated', async () => {
     console.log('Authenticated')
-})  
+})
 
 client.on('authentication_failure', async (message) => {
     console.log('Auth failed: ', message)
-})  
+})
 client.on('loading_screen', async (message) => {
     console.log('Loading... ', message)
-})  
+})
 client.on('state_changed', async (message) => {
     console.log('State changed: ', message)
 })
@@ -82,18 +81,60 @@ client.on('message', async (message) => {
 
     // No hay números registrados a ese número.
     if (!numbersLike.length || (
-        message.type != 'chat' && 
-        message.type != 'image' && 
-        message.type != 'document' && 
-        message.type != 'video' && 
+        message.type != 'chat' &&
+        message.type != 'image' &&
+        message.type != 'document' &&
+        message.type != 'video' &&
         message.type != 'location'
         )) return;
     if (numbersLike[0].number_from == null) setNumberFrom(numbersLike[0].id, message.from);
     const userId = numbersLike[0].id;
     let msgId = null;
-    
-    
 
+    const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
+
+    if (openTicketFromUser) {
+        saveMessage(message, userId, openTicketFromUser);
+    }
+
+    // Cerrar ticket
+    if (message.body.toLowerCase() == 'terminarticket' && openTicketFromUser) {
+        moveTicketToOpen(openTicketFromUser.id);
+        client.sendMessage(message.from,
+            `Ticket *#${openTicketFromUser.id}* guardado!`
+        );
+        return;
+    }
+
+    // Eliminar ticket
+    if (message.body.toLowerCase() == 'eliminarticket' && openTicketFromUser) {
+        deleteTicketById(openTicketFromUser.id);
+        client.sendMessage(message.from,
+            `Ticket *#${openTicketFromUser.id}* eliminado.`
+        );
+        return;
+    }
+
+    if (openTicketFromUser == undefined) { // No existe un ticket ya abierto cargando datos -> crear ticket y actualizar foto de perfil
+        const ticketId = (await openNewTicket(userId))[0].insertId;
+        const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
+        saveMessage(message, userId, openTicketFromUser);
+
+        const contact = await message.getContact();
+        const profilePicURL = await contact.getProfilePicUrl();
+        setProfilePicURL(userId, profilePicURL);
+
+        client.sendMessage(message.from,
+            `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _terminarticket_ \n O para eliminarlo _eliminarticket_`
+        )
+    } else {
+        client.sendMessage(message.from,
+            `Mensaje agregado al Ticket *#${openTicketFromUser.id}* \nTu Ticket se cerrará automáticamente en 5 minutos.`
+        );
+    }
+})
+
+async function saveMessage(message, userId, openTicketFromUser) {
     if (message.hasMedia && (message.type == 'video' || message.type == 'image' || message.type == 'document')) {
         const media = await message.downloadMedia();
         let mediaType;
@@ -106,7 +147,7 @@ client.on('message', async (message) => {
                 mediaType = 'mp4';
                 break;
         }
-        
+
         const filename = (media.filename) ? media.filename : `${userId}-${message.timestamp}.${mediaType}`;
 
         fs.writeFile(
@@ -119,47 +160,10 @@ client.on('message', async (message) => {
                 }
             }
         );
-        msgId = (await storeMessage(`media/${filename}`, userId))[0].insertId;
+        msgId = (await storeMessage(`media/${filename}`, userId, openTicketFromUser.id))[0].insertId;
     } else if (message.type == 'location') {
-        msgId = (await storeMessage(`https://www.google.com/maps/search/?api=1&query=${message.location.latitude},${message.location.longitude}`, userId))[0].insertId;
+        msgId = (await storeMessage(`https://www.google.com/maps/search/?api=1&query=${message.location.latitude},${message.location.longitude}`, userId, openTicketFromUser.id))[0].insertId;
     } else if (message.type == 'chat') {
-        msgId = (await storeMessage(message.body, userId))[0].insertId;
+        msgId = (await storeMessage(message.body, userId, openTicketFromUser.id))[0].insertId;
     }
-
-    const openTicketFromUser = (await getOpenTicketsFrom(userId))[0];
-
-    // Cerrar ticket
-    if (message.body.toLowerCase() == 'terminarticket' && openTicketFromUser) {
-        moveTicketToOpen(openTicketFromUser.id);
-        client.sendMessage(message.from, 
-            `Ticket *#${openTicketFromUser.id}* guardado!`
-        );
-        return;
-    }
-
-    // Eliminar ticket
-    if (message.body.toLowerCase() == 'eliminarticket' && openTicketFromUser) {
-        deleteTicketById(openTicketFromUser.id);
-        client.sendMessage(message.from, 
-            `Ticket *#${openTicketFromUser.id}* eliminado.`
-        );
-        return;
-    }
-
-    if (openTicketFromUser == undefined) { // No existe un ticket ya abierto cargando datos -> crear ticket y actualizar foto de perfil
-        const ticketId = (await openNewTicket(userId, msgId))[0].insertId;
-
-        const contact = await message.getContact();
-        const profilePicURL = await contact.getProfilePicUrl();
-        setProfilePicURL(userId, profilePicURL);
-
-        client.sendMessage(message.from,
-            `✉️ Nuevo Ticket creado (*#${ticketId}*)! \nLo que sigas mandando en los próximos 5 minutos se va a cargar automáticamente a este ticket. \nPara cerrarlo escribe _terminarticket_ \n O para eliminarlo _eliminarticket_`
-        )
-    } else {
-        addNewMessageToTicket(openTicketFromUser.id, msgId);
-        client.sendMessage(message.from, 
-            `Mensaje agregado al Ticket *#${openTicketFromUser.id}* \nTu Ticket se cerrará automáticamente en 5 minutos.`
-        );
-    }
-})
+}
