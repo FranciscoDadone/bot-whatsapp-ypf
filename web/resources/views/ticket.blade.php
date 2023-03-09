@@ -54,9 +54,16 @@
         </div>
         <div style="display: table-cell; text-align:right;">
         @if (hasPermission(1))
+            @if (!$ticket->assigned_to)
             <button type="button" data-toggle="modal" data-target="#OpenPopUpAssign" class="focus:outline-none text-white text-sm py-2 px-4 rounded-sm bg-blue-400 hover:bg-blue-500 hover:shadow-lg hover:no-underline" style="border: 1px solid #3b82f6; background-color: #3b82f6; display:flex;">
                 <i class="fa fa-forward"></i><span style="padding-left: 0.5em;"> Asignar</span>
             </button>
+            @else
+            Asignado a {{ $assigned_to->name }}
+            <button type="button" data-toggle="modal" data-target="#OpenPopUpAssign" class="focus:outline-none text-white text-sm py-2 px-4 rounded-sm bg-orange-400 hover:bg-orange-500 hover:shadow-lg hover:no-underline" style="border: 1px solid #fca903; background-color: #fca903; display:flex;">
+                <i class="fa fa-forward"></i><span style="padding-left: 0.5em;"> Reasignar</span>
+            </button>
+            @endif
         @endif
         </div>
     </x-slot>
@@ -100,6 +107,7 @@
         </div>
     </div>
 
+    @if (hasPermission(1))
     <!-- Modal Assign -->
     <div id="OpenPopUpAssign" class="modal fade p-0">
         <div class="modal-dialog modal-login" style="max-width: 720px;">
@@ -122,7 +130,11 @@
                                     <select id="select2-usuario" name="user" class="form-control" style="width: 70%;">
                                         <option value="">Seleccionar...</option>
                                         @foreach($users as $user)
+                                        @if ($assigned_to == $user)
+                                        <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
+                                        @else
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -141,6 +153,7 @@
             </div>
         </div>
     </div>
+    @endif
 </x-app-layout>
 <script>
     $(document).ready(function() {

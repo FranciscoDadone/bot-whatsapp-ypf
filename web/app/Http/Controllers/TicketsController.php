@@ -25,7 +25,9 @@ class TicketsController extends Controller
 
         $users = User::where([['id', '!=', auth()->user()->id]])->get();
 
-        return view('ticket', compact('ticket', 'color_ticket', 'users'));
+        $assigned_to = ($ticket->assigned_to) ? User::where([['id', $ticket->assigned_to]])->first() : '';
+
+        return view('ticket', compact('ticket', 'color_ticket', 'users', 'assigned_to'));
     }
 
     public function change_status($id, $status) {
