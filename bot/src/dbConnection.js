@@ -28,6 +28,10 @@ const getRegisteredNumbersLike = (number) => {
     return connection.promise().query('SELECT `id`, `number_from` FROM `phone_numbers` WHERE deleted=0 AND number LIKE ?;', ['%' + number]);
 };
 
+const getRegisteredUsersNumbersLike = (number) => {
+    return connection.promise().query('SELECT `id`, `number_from` FROM `users` WHERE deleted=0 AND number LIKE ?;', ['%' + number]);
+};
+
 /**
  * Guarda el mensaje en 'mensajes'
  * @param {*} message
@@ -84,6 +88,10 @@ const setNumberFrom = (id, from) => {
     connection.promise().query('UPDATE `phone_numbers` SET `number_from`=? WHERE id=?;', [from, id]);
 };
 
+const setNumberFromUser = (id, from) => {
+    connection.promise().query('UPDATE `users` SET `number_from`=? WHERE id=?;', [from, id]);
+};
+
 /**
  * Asigna la url de la foto de perfil.
  * @param {*} id
@@ -129,5 +137,7 @@ module.exports = {
     deleteTicketById,
     getTicketById,
     deleteMessageById,
-    setProfilePicURL
+    setProfilePicURL,
+    getRegisteredUsersNumbersLike,
+    setNumberFromUser
 }

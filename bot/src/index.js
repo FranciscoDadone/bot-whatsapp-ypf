@@ -12,7 +12,9 @@ const {
     setNumberFrom,
     getNumberById,
     deleteTicketById,
-    setProfilePicURL
+    setProfilePicURL,
+    getRegisteredUsersNumbersLike,
+    setNumberFromUser
 } = require('./dbConnection');
 
 
@@ -79,6 +81,13 @@ client.on('message', async (message) => {
 
     const number = message.from.split('@')[0].substring(3);
     const numbersLike = (await getRegisteredNumbersLike(number))[0];
+    const numbersLikeUsers = (await getRegisteredUsersNumbersLike(number))[0];
+
+    if (message.type == 'chat' && message.body.toLowerCase() == 'verificar' && numbersLikeUsers[0] && (numbersLikeUsers[0].number_from == null || numbersLikeUsers[0].number_from == '')) {
+        setNumberFromUser(numbersLikeUsers[0].id, message.from);
+        client.sendMessage(message.from, 'Número verificado correctamente!');
+        return;
+    }
 
     // No hay números registrados a ese número.
     if (!numbersLike.length || (
