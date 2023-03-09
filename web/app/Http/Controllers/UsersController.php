@@ -25,8 +25,16 @@ class UsersController extends Controller
             'name' => $request->nombre . ' ' . $request->apellido,
             'role' => 2,
             'email' => $request->email,
+            'number' => $request->numero,
             'password' => Hash::make($request->password)
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('success', "Usuario agregado con éxito! Ahora que $request->numero envíe un WhatsApp con 'verificar' para completar la verificación.");
+    }
+
+    public function delete($id) {
+        User::where([['id', $id]])->update([
+            'deleted' => 1
+        ]);
+        return redirect()->back()->with('success', 'Usuario eliminado con éxito.');
     }
 }

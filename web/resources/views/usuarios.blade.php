@@ -5,6 +5,17 @@
         </h2>
     </x-slot>
 
+    @if ( Session::get('success'))
+		<div class="alert alert-success">
+			{{ Session::get('success') }}
+		</div>
+	@endif
+	@if ( Session::get('error'))
+		<div class="alert alert-danger">
+		    {{ Session::get('error') }}
+		</div>
+	@endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white  overflow-hidden shadow-sm sm:rounded-lg">
@@ -59,19 +70,23 @@
                         <div class="text-center">
                             <div class="form-group m-0">
                                 <x-input-label for="nombre" :value="__('Nombre')" />
-                                <x-text-input id="nombre" class="mt-1" type="text" name="nombre" />
+                                <input id="nombre" class="mt-1" type="text" name="nombre" required>
                             </div>
                             <div class="text-center">
                                 <x-input-label for="apellido" :value="__('Apellido')" />
-                                <x-text-input id="apellido" class="mt-1" type="text" name="apellido" />
+                                <input id="apellido" class="mt-1" type="text" name="apellido" required>
                             </div>
                             <div class="text-center">
                                 <x-input-label for="email" :value="__('Email')" />
-                                <x-text-input id="email" class="mt-1" type="text" name="email" />
+                                <input id="email" class="mt-1" type="text" name="email">
+                            </div>
+                            <div class="text-center">
+                                <x-input-label for="numero" :value="__('Número tel.')" />
+                                <input id="numero" class="mt-1" type="text" name="numero" required>
                             </div>
                             <div class="text-center">
                                 <x-input-label for="password" :value="__('Contraseña')" />
-                                <x-text-input id="password" class="mt-1" type="password" name="password" required />
+                                <input id="password" class="mt-1" type="password" name="password" required>
                             </div>
                         </div>
                         <div class="px-4 pt-3 pb-2 sm:px-6 sm:flex sm:flex-row-reverse">

@@ -27,6 +27,8 @@ class UsuariosTableView extends TableView
         return [
             Header::title('NOMBRE')->sortBy('name'),
             Header::title('EMAIL')->sortBy('email'),
+            Header::title('NÚMERO')->sortBy('number'),
+            Header::title('NÚMERO INT.')->sortBy('number_from'),
             Header::title('CREACIÓN')->sortBy('created_at'),
             ""
         ];
@@ -41,6 +43,8 @@ class UsuariosTableView extends TableView
         return [
             UI::editable($model, 'name'),
             UI::editable($model, 'email'),
+            UI::editable($model, 'number'),
+            UI::editable($model, 'number_from'),
             date_format(date_create($model->created_at), 'd/m/Y H:i:s'),
             $btn
         ];

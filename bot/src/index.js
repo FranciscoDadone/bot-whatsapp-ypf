@@ -76,6 +76,7 @@ client.on('state_changed', async (message) => {
 })
 
 client.on('message', async (message) => {
+
     const number = message.from.split('@')[0].substring(3);
     const numbersLike = (await getRegisteredNumbersLike(number))[0];
 

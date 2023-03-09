@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/usuarios', [UsersController::class, 'usuarios'])->name('usuarios')->middleware('permissions:1');
     Route::post('/usuarios/new', [UsersController::class, 'new'])->name('usuarios.new')->middleware('permissions:1');
+    Route::post('/usuarios/delete/{id}', [UsersController::class, 'delete'])->name('usuarios.delete')->middleware('permissions:1');
 });
 
 require __DIR__.'/auth.php';
