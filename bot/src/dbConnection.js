@@ -124,6 +124,14 @@ const deleteTicketById = async (id) => {
     connection.promise().query('DELETE FROM `tickets` WHERE id=?;', [id]);
 }
 
+const getNotifications = async () => {
+    return (await connection.promise().query('SELECT * FROM `wp_notifications`;'))[0];
+}
+
+const deleteNotificationById = (id) => {
+    connection.promise().query('DELETE FROM `wp_notifications` WHERE id=?;', [id]);
+}
+
 module.exports = {
     connect,
     storeMessage,
@@ -139,5 +147,7 @@ module.exports = {
     deleteMessageById,
     setProfilePicURL,
     getRegisteredUsersNumbersLike,
-    setNumberFromUser
+    setNumberFromUser,
+    getNotifications,
+    deleteNotificationById
 }

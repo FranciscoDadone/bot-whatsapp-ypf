@@ -14,7 +14,9 @@ const {
     deleteTicketById,
     setProfilePicURL,
     getRegisteredUsersNumbersLike,
-    setNumberFromUser
+    setNumberFromUser,
+    getNotifications,
+    deleteNotificationById
 } = require('./dbConnection');
 
 
@@ -34,12 +36,12 @@ console.log("Starting bot...")
 
 const init = async () => {
     client.initialize();
-    checkLoadingTicket();
 };
 setTimeout(init, 5000);
 
 const checkLoadingTicket = async () => {
     const loadingTickets = await getAllLoadingTickets();
+    const notifications = await getNotifications();
 
     loadingTickets.forEach(async (ticket) => {
         const dateDiff = ((new Date() - ticket.created_at) / 1000) / 60;
@@ -52,6 +54,11 @@ const checkLoadingTicket = async () => {
         }
     });
 
+    notifications.forEach(async (notification) => {
+        client.sendMessage(notification.phone_number, notification.message);
+        deleteNotificationById(notification.id);
+    })
+
     setTimeout(checkLoadingTicket, 60000);
 }
 
@@ -61,10 +68,11 @@ client.on('qr', (qr) => {
 
 client.on('ready', async () => {
     console.log('Client is ready!');
+    checkLoadingTicket();
 });
 
 client.on('authenticated', async () => {
-    console.log('Authenticated')
+    console.log('Authenticated');
 })
 
 client.on('authentication_failure', async (message) => {

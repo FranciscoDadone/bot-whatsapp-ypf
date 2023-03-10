@@ -103,6 +103,16 @@
                     @endif
                 </div>
                 @endforeach
+                <br>
+                <div style="display: flex;">
+                    <button type="button" class="btn" style="background-color: #b3b3b3; border-radius: 2em; margin-right: 0.5em;">
+                        <i class="fa fa-paperclip"></i>
+                    </button>
+                    <input type="text" style="width: 100%; border-radius: 0.5em;" />
+                    <button type="button" class="btn btn-primary">
+                        <i class="fa fa-envelope"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

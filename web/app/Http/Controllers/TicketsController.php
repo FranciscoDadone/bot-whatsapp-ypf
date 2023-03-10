@@ -50,7 +50,7 @@ class TicketsController extends Controller
 
         if ($user->exists()) {
             WpNotification::create([
-                'message' => "Fuiste asignado el ticket #$ticket_id. \nIngresá a $app_url/ticket/ver/$ticket_id",
+                'message' => "🚩 Fuiste asignado el ticket #$ticket_id \nIngresá a $app_url/ticket/ver/$ticket_id",
                 'phone_number' => $user->value('number_from')
             ]);
         }
