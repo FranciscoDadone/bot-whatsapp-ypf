@@ -128,7 +128,7 @@
                                 <div class="form-group m-0">
                                     <input type="number" name="ticket_id" value="{{ $ticket->id }}" hidden />
                                     <select id="select2-usuario" name="user" class="form-control" style="width: 70%;">
-                                        <option value="">Seleccionar...</option>
+                                        <option value="">No asignar</option>
                                         @foreach($users as $user)
                                         @if ($assigned_to == $user)
                                         <option value="{{ $user->id }}" selected>{{ $user->name }}</option>

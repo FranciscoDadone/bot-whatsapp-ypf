@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('from');
             $table->integer('assigned_to')->nullable()->default(null);
             $table->string('status');
+            $table->string('status_assigned')->nullable();
+            $table->boolean('assigned_taken')->nullable();
             $table->string('notes');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

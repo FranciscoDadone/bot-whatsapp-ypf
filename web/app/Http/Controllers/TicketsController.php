@@ -23,7 +23,7 @@ class TicketsController extends Controller
         else if ($ticket->status == 'EN_PROCESO') $color_ticket = '#fcf453';
         else if ($ticket->status == 'CERRADO') $color_ticket = '#b8b8b8';
 
-        $users = User::where([['id', '!=', auth()->user()->id]])->get();
+        $users = User::where([['id', '!=', auth()->user()->id], ['deleted', 0]])->get();
 
         $assigned_to = ($ticket->assigned_to) ? User::where([['id', $ticket->assigned_to]])->first() : '';
 

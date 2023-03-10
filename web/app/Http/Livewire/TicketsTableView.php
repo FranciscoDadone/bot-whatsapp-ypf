@@ -57,7 +57,7 @@ class TicketsTableView extends TableView
 
         $status = $model->status;
         if ($model->status == 'EN_PROCESO') $status = 'EN PROCESO';
-        if ($model->assigned_to != null && hasPermission(1)) $status = "Delegado ($status)";
+        if ($model->assigned_to != null && hasPermission(1)) $status = "Asignado ($status)";
 
         $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button> <button id="del" data-toggle="modal" data-target="#OpenPopUpDelete" onclick="cargarDatosDelete(' . $model->id . ')" class="btn btn-sm btn-outline-danger">Eliminar</button>';
         if ($model->status == 'CARGANDO' || !hasPermission(1)) $buttons = '<button onclick="verTicket(' . $model->id . ')" class="btn btn-sm btn-outline-primary">Ver ticket</button>';
