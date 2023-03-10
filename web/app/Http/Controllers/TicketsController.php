@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\WpNotification;
 use Illuminate\Http\Request;
 
 class TicketsController extends Controller
@@ -43,6 +44,16 @@ class TicketsController extends Controller
         Ticket::where([['id', $ticket_id]])->update([
             'assigned_to' => $user_id
         ]);
+
+        $app_url = getEnv('APP_URL');
+        $user = User::where([['id', $user_id]]);
+
+        if ($user->exists()) {
+            WpNotification::create([
+                'message' => "Fuiste asignado el ticket #$ticket_id. \nIngresá a $app_url/ticket/ver/$ticket_id",
+                'phone_number' => $user->value('number_from')
+            ]);
+        }
 
         return back();
     }
